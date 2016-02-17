@@ -200,7 +200,7 @@ Template.matrix.helpers({
 
                 }else{
                     //alert("You have Illegal Input! Enter Integer Between 1~10");
-                    sAlert.error('Use integers between 1~10 to compare candidates');
+                    sAlert.error('Use integers between 1~5 to compare candidates');
                     Cells.update(x._id,{$set: {data: "-"}});
                 }
             }
