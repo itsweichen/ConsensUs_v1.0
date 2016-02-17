@@ -200,7 +200,7 @@ Template.matrix.helpers({
 
                 }else{
                     //alert("You have Illegal Input! Enter Integer Between 1~10");
-                    sAlert.error('Use integers between 1~5 to compare candidates');
+                    sAlert.error('Use integers between 1~10 to compare candidates');
                     Cells.update(x._id,{$set: {data: "-"}});
                 }
             }
@@ -437,13 +437,9 @@ Template.cellshow.helpers({
         return 'show col0'
       }else if(this.column===1){
         return 'show col1'
-      }else if(this.column===2){
-          return 'show col2'
-      }
-
-      else
+      }else
       {
-        return 'body';
+        return 'show';
       }
     },
     notWeight:function(){

@@ -276,10 +276,10 @@ Template.reportMatrix.helpers({
     getCP: function(PID){
         var NC = completeP(PID);
         var ALL = findAll(PID);
-        //console.log("---");
-        //console.log(NC);
-        //console.log(ALL);
-        //console.log("%%%");
+        console.log("---");
+        console.log(NC);
+        console.log(ALL);
+        console.log("%%%");
         var temp = ((ALL-NC)/ALL)*100;
         Session.set('progressPercent', temp );
         //return (((ALL-NC)/ALL)*100).toFixed(1);
@@ -341,25 +341,8 @@ var findMaxSD = function(proID){
 
         }
 
-    });
-
-    return max;
-}
 
 
-
-
-var findMaxSDforWeight = function(proID){
-    // get the SDdata field data of all the report cells
-    var cellCursor = Cells.find({projectID:proID,isReport:true,column:2},
-        {fields: {SDdata: 1, row:1, column:1}});
-    var max=0;
-    cellCursor.forEach(function (cell) {
-
-
-            if(cell.SDdata>max){
-                max=cell.SDdata;
-            }
 
 
 
@@ -395,35 +378,12 @@ Template.reportcellshow.helpers({
         }else if(this.column===0){
           temp = 'show col0';
           }else if(this.column===1){
-
             temp = 'show col1';
-            }
-
-      else if(this.column===2){
-          temp = 'show';
-          var thisProjectforWeight = Indexs.findOne({userID:Meteor.userId()});
-          var maxSDforWeight=findMaxSDforWeight(this.projectID);
-          var SDthforWeight = Number(thisProjectforWeight.sTH)*maxSDforWeight;
-          if(this.SDdata >= SDthforWeight){
-              var changeColorforWeight = true;
-          }else{
-              changeColorforWeight=false;
-          }
-          if(changeColorforWeight){
-              temp= 'show colorCellforWeight';
-          }
-
-
-
-      }
-
-
-
-      else {
+            }else{
               temp = 'show';
               //whether to change color.
               //var thisProject = Projects.findOne({_id: this.projectID});
-              var thisProject = Indexs.findOne({userID:Meteor.userId()});
+          var thisProject = Indexs.findOne({userID:Meteor.userId()});
               var maxSD=findMaxSD(this.projectID);
           //console.log(maxSD);
               var SDth = Number(thisProject.sTH)*maxSD;
@@ -437,10 +397,9 @@ Template.reportcellshow.helpers({
                 changeColor=false;
               }
               if(changeColor){
-                      temp= 'show colorCell';
+                temp= 'show colorCell';
               }
-
-            }
+      }
     return temp;
     },
 

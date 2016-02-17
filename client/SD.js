@@ -44,7 +44,6 @@ Template.setTH.onRendered (function(){
       var uid2 = Meteor.userId();
       var temp2 = Indexs.findOne({userID:uid2});
       Indexs.update({_id:temp2._id},{$set:{sTH:val}});
-
     
   })
 });
