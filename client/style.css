@@ -64,14 +64,14 @@ a {
 .project-nav{
 	background-color:#f1f3f4;
 	width: 100%;
-	height: 100px;
+	height: 149px;
 	padding-left: 100px;
-	padding-top: 18px;
+	padding-top: 54px;
 }
 .project-nav h2{
 	margin-top: 0;
 	color: #269fb2;
-	width: 10%;
+	width: 30%;
 	margin: 0;
 	float: left;
 }
@@ -83,13 +83,11 @@ a {
 	margin-right:20px;
 }
 .table-container{
-	/*margin-top: 15px;*/
-	/*margin-left: 15px;*/
-	margin: 15px;
+	margin-top: 87px;
+	margin-left: 113px;
 }
 .table-container table{
 	table-layout:fixed;
-
 }
 .table-null{
 	width: 220px;
@@ -148,10 +146,8 @@ a {
 }
 .col0{
 	text-align: left !important;	
-	padding-left: 20px;
-	font-size:20px;
-	width: 200px;
-	word-break: keep-all;
+	padding-left: 40px;
+	font-size: 24px;
 }
 .col1{
 	width: 50px;
@@ -303,7 +299,7 @@ a {
 }
 .delete-candi,.delete-fac{
 	font-size: 10px;
-	/*float: right;*/
+	float: right;
 }
 .addButton{
 	/*background-image: url('/Btn-Add.png');*/
@@ -311,11 +307,11 @@ a {
 	height: 38px;
 }
 #addCandi{
-	padding-left: 8px;
+	padding-left: 30px;
 }
 #addFac{
 	text-align: center;
-	padding-top: 8px;
+	padding-top: 10px;
 }
 .project-tool{
 	float: right;
@@ -350,8 +346,8 @@ a {
 
 }
 .slider-container{
-	width:77%;
-	margin-left: 0%;
+	width:90%;
+	margin-left: 5%;
 	margin-top: 10px;
 }
 
@@ -362,15 +358,6 @@ a {
 	height: 70px ;
 	text-align: center;
 	background-color: #359eb4;
-
-}
-
-.projectListCell2{
-	list-style-type: none ;
-	border: 1px solid #359eb4;
-	height: 70px ;
-	text-align: center;
-	background-color: #7ed420;
 
 }
 

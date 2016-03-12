@@ -31,42 +31,15 @@ var calculateOne = function(rowNo, columnNo,proID){
     var cellUserCursor=Cells.find({isReport:false,row: rowNo, column:columnNo, projectID:proID});
     
     var sum = 0;
-    var count = 0;
-    //var count = cellUserCursor.count();
+    var count = cellUserCursor.count();
     
     cellUserCursor.forEach(function(cellUser){
-
-        if(isNaN(cellUser.data)){
-
-        }else{
-
-            sum = sum + Number(cellUser.data);
-            count = count+1;
-        }
-
+      sum = sum + Number(cellUser.data);
       
     });
     
     var aver = sum/count;
     return aver;
-}
-
-
-var completeP = function(PID){
-    var cellCursor = Cells.find({isReport:false, column:{"$gte":3},row:{"$gte":1},data:{"$in":['Input','-']}});
-    var NC = cellCursor.count();
-    return NC;
-
-}
-
-
-var findAll = function(PID){
-    //var col = Projects.findOne({_id:PID}).columns;
-    //var row = Projects.findOne({_id:PID}).rows;
-    //var all = col*row;
-    var cellCursor = Cells.find({isReport:false, column:{"$gte":3},row:{"$gte":1}});
-    var all = cellCursor.count();
-    return all
 }
 
 /**
@@ -84,36 +57,13 @@ var updateRow = function(proID,rowNo){
           if(cell.column>0){
             // the evaluation cells.
           var aver = calculateOne(rowNo,cell.column,proID);
-              var v = calculateSD(rowNo,cell.column,proID,aver);
-              //console.log(aver);
-              if(isNaN(aver) ){
-
-
-                  Cells.update(cell._id,{$set: {data: "-", SDdata:v.toFixed(3)}});
-
-              }
-              else{
-                  Cells.update(cell._id,{$set: {data: aver.toFixed(3), SDdata:v.toFixed(3)}});
-
-              }
+          Cells.update(cell._id,{$set: {data: aver.toFixed(3)}});
         }
       }else if(rowNo===-1){
           if(cell.column>1){
             // all the score cells.
           var aver = calculateOne(rowNo,cell.column,proID);
-              var v = calculateSD2(rowNo,cell.column,proID,aver);
-
-
-              if(isNaN(aver)|| isNaN(v)){
-                  Cells.update(cell._id,{$set: {data: "-", SDdata:"-"}});
-              }
-              else{
-                  Cells.update(cell._id,{$set: {data: aver.toFixed(3), SDdata:v.toFixed(3)}});
-              }
-
-
-
-
+          Cells.update(cell._id,{$set: {data: aver.toFixed(3)}});
         }
       }
     })
@@ -124,46 +74,21 @@ calculateSD: calculate the SD of one cell of all the users in this project.
 return: variance value.
 **/
 
-var calculateSD = function(rowNo, columnNo,proID,aver){
+var calculateSD = function(rowNo, columnNo,proID){
     var cellUserCursor=Cells.find({isReport:false,row: rowNo, column:columnNo, projectID:proID});
     var tempSum = 0;
     var sum = 0;
-    //var count = cellUserCursor.count();
+    var count = cellUserCursor.count();
 
-    var count = 0;
+    cellUserCursor.forEach(function(cellUser){
+        tempSum = tempSum + Number(cellUser.data);
+    });
 
-    //cellUserCursor.forEach(function(cellUser){
-    //    tempSum = tempSum + Number(cellUser.data);
-    //});
-
-    //var avg = tempSum/count;
-    var avg = aver;
-    //
-    //var ary = Cells.find({isReport:true, userID:Meteor.userId()}).toArray();
-    //
-    //console.log("%%%%%%%%%%%");
-    ////console.log(ary);
-    //console.log("%%%%%%%%%%%");
-    //
-    //
+    var avg = tempSum/count;
 
 
     cellUserCursor.forEach(function(cellUser){
-
-
-        if(isNaN(cellUser.data)){
-
-        }else{
-            count = count + 1;
-            var a = Number(cellUser.data);
-            sum = sum + (a-avg)*(a-avg);
-
-        }
-
-
-
-
-
+      sum = sum + (Number(cellUser.data)-avg)*(Number(cellUser.data)-avg);
     });
 
     var variance = sum/count;
@@ -173,48 +98,6 @@ var calculateSD = function(rowNo, columnNo,proID,aver){
 };
 
 
-
-var calculateSD2 = function(rowNo, columnNo,proID,aver){
-    var cellUserCursor=Cells.find({isReport:false,row: rowNo, column:columnNo, projectID:proID});
-    var tempSum = 0;
-    var sum = 0;
-    var count = 0;
-    //var count = cellUserCursor.count();
-
-
-    var avg = aver;
-
-
-
-    cellUserCursor.forEach(function(cellUser){
-
-        if(isNaN(cellUser.data)){
-
-        }
-        else{
-            count = count+1;
-            var a = Number(cellUser.data);
-            //console.log("data:");
-            //console.log(a);
-            sum = sum + (a-avg)*(a-avg);
-            //console.log("sum:");
-            //console.log(sum);
-        }
-
-
-
-
-    });
-
-    var variance = sum/count;
-    //console.log("V:");
-    //console.log(variance);
-    variance = Math.sqrt(variance);
-    //console.log(variance);
-    //console.log("============");
-
-    return variance;
-};
 
 
 var updateRowForVariance = function(proID,rowNo){
@@ -225,13 +108,14 @@ var updateRowForVariance = function(proID,rowNo){
         
         if(rowNo>0){
             if(cell.column>0){
-                var variance = calculateSD2(rowNo,cell.column,proID);
+                var variance = calculateSD(rowNo,cell.column,proID);
 
                 Cells.update(cell._id,{$set: {SDdata : variance.toFixed(3)}});
             }
         }else if(rowNo===-1){
             if(cell.column>1){
-                var variance = calculateSD2(rowNo,cell.column,proID);
+                var variance = calculateSD(rowNo,cell.column,proID);
+                console.log(variance);
                 Cells.update(cell._id,{$set: {SDdata : variance.toFixed(3)}});
 
             }
@@ -271,22 +155,7 @@ Template.reportMatrix.helpers({
 
     UID: function(){
         return Meteor.userId();
-    },
-
-    getCP: function(PID){
-        var NC = completeP(PID);
-        var ALL = findAll(PID);
-        console.log("---");
-        console.log(NC);
-        console.log(ALL);
-        console.log("%%%");
-        var temp = ((ALL-NC)/ALL)*100;
-        Session.set('progressPercent', temp );
-        //return (((ALL-NC)/ALL)*100).toFixed(1);
-    },
-
-
-
+    }
   });
 
 
@@ -296,8 +165,8 @@ Session.setDefault({showNotes: showCheckBox});
 Template.reportMatBody.helpers({
     cellFindRow: function(rowNo, projectID){
       updateRow(projectID,rowNo);
-      //updateRowForVariance(projectID,rowNo);
-     // updateRowForVariance(projectID,-1);
+      updateRowForVariance(projectID,rowNo);
+      updateRowForVariance(projectID,-1);
 
       return cellFindRow(rowNo,projectID);
     },
@@ -305,18 +174,7 @@ Template.reportMatBody.helpers({
     showNotes: function(row){
     return Session.get('showNotes')[row-1];
 
-    },
-
-    //getCP: function(PID){
-    //    var NC = completeP(PID);
-    //    var ALL = findAll(PID);
-    //    console.log("---");
-    //    console.log(NC);
-    //    console.log(ALL);
-    //    console.log("%%%");
-    //    return (ALL-NC)/ALL;
-    //}
-
+    }
 });
 
 
@@ -330,22 +188,12 @@ Template.reportMatBody.helpers({
 var findMaxSD = function(proID){
     // get the SDdata field data of all the report cells
     var cellCursor = Cells.find({projectID:proID,isReport:true}, 
-    {fields: {SDdata: 1, row:1, column:1}});
+    {fields: {SDdata: 1}});
     var max=0;
     cellCursor.forEach(function (cell) {
-
-        if(cell.column>=3&&cell.row>=0){
-            if(cell.SDdata>max){
-                max=cell.SDdata;
-            }
-
-        }
-
-
-
-
-
-
+      if(cell.SDdata>max){
+        max=cell.SDdata;
+      }
     });
 
     return max;
@@ -382,16 +230,11 @@ Template.reportcellshow.helpers({
             }else{
               temp = 'show';
               //whether to change color.
-              //var thisProject = Projects.findOne({_id: this.projectID});
-          var thisProject = Indexs.findOne({userID:Meteor.userId()});
+              var thisProject = Projects.findOne({_id: this.projectID});
               var maxSD=findMaxSD(this.projectID);
-          //console.log(maxSD);
               var SDth = Number(thisProject.sTH)*maxSD;
-          //console.log(Number(thisProject.sTH));
-          //console.log("SDTH");
-          //console.log(SDth);
               
-              if(this.SDdata >= SDth){
+              if(this.SDdata <= SDth){
                 var changeColor = true;
               }else{
                 changeColor=false;
@@ -418,15 +261,7 @@ Template.reportcellshow.helpers({
     **/
     dataPercent: function(){
       var value=Number(this.data);
-        if(isNaN(value)){
-            return "-"
-        }
-        else{
-            return (value*100).toFixed(1);
-        }
-
-
-
+      return (value*100).toFixed(1);
     }
 });
 
@@ -479,8 +314,6 @@ Template.addCandidate.events({
 
       for(var item in this.users){
         var nowUserId=this.users[item].userId;
-          var nowUsername=this.users[item].username;
-
         
         for (i=-1;i<=Number(this.rows);i++){
           if(i===0){     
@@ -491,18 +324,16 @@ Template.addCandidate.events({
               createdAt: new Date(),
               column: Number(this.columns)+3,
               projectID:this._id,
-              SDdata:0,
-          username:nowUsername});
+              SDdata:0});
           }else{
           Cells.insert({
           userID: nowUserId,isReport: false,
-          data: "Input",
+          data: 0,
           row: i,
           createdAt: new Date(),
           column: Number(this.columns)+3,
           projectID:this._id,
-          SDdata:0,
-              username:nowUsername
+          SDdata:0
           });
         }
       }    
@@ -554,8 +385,6 @@ Template.addFactor.events({
      for(var item in this.users){
 
         var nowUserId=this.users[item].userId;
-         var nowUsername=this.users[item].username;
-
         for (var i=0;i<=Number(this.columns)+2;i++){
         
           if(i===0){     
@@ -566,18 +395,16 @@ Template.addFactor.events({
             createdAt: new Date(),
             column: 0,
             projectID:this._id,
-            SDdata:0,
-                username:nowUsername});
+            SDdata:0});
           }else{
             Cells.insert({
             userID: nowUserId,isReport: false,
-            data: "Input",
+            data: 0,
             row: this.rows+1,
             createdAt: new Date(),
             column: i,
             projectID:this._id,
-            SDdata:0,
-                username:nowUsername});
+            SDdata:0});
           }
       }    
     }
@@ -683,56 +510,3 @@ toggle shownotes: set session array showNotes.
     }
 
   });
-
-
-Template.someTemplate.helpers({
-    'ggg': function(cellid, what){
-        //console.log(cellid);
-        var row = Cells.findOne({_id:cellid}).row;
-        var column = Cells.findOne({_id:cellid}).column;
-        //console.log(row);
-        //console.log(column);
-
-
-
-        if(column==0||row==0){
-            return false
-        }
-        else{
-
-            if(row==-1){
-                return Cells.find({isReport: true,row: row, column:column, projectID:what});
-            }
-
-            return Cells.find({isReport: false,row: row, column:column, projectID:what});
-            //return Cells.find({isReport: false,row: row, column:column, projectID:what});
-        }
-
-
-    },
-
-
-    isT: function(){
-        var flag = (this.row === -1);
-        return flag;
-    },
-
-
-    'ccpr': function(){
-
-        //var cellid= this._id;
-        //var row = Cells.findOne({_id:cellid}).row;
-        //
-        //
-        //if(row==-1){
-        //    return true;
-        //}
-        //else{
-        //    return false;
-        //}
-
-
-        return true;
-    }
-
-})

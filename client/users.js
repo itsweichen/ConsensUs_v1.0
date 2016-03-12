@@ -20,40 +20,23 @@ Template.changePassword.events({
  Function: Register a user
  **/
 Template.register.events({
-    //'submit form': function(){
-    //    event.preventDefault();
-    //    var username = $('[name=username]').val();
-    //    var password = '1234';
-    //    Accounts.createUser({
-    //            username: username,
-    //            password: password},
-    //        function(err){
-    //            if(err)
-    //                console.log(err);
-    //            else
-    //            {
-    //                var currentUserID = Meteor.userId();
-    //            }
-    //        });
-    //    Router.go('user');
-    //}
-
-
-
-    'submit form': function(event){
+    'submit form': function(){
         event.preventDefault();
         var username = $('[name=username]').val();
-        var password = '1234';
-        Meteor.loginWithPassword(username, password,function(err){
-            if(err){
-                console.log(err);
-            }
-        });
+        var password = $('[name=password]').val();
+        Accounts.createUser({
+                username: username,
+                password: password},
+            function(err){
+                if(err)
+                    console.log(err);
+                else
+                {
+                    var currentUserID = Meteor.userId();
+                }
+            });
         Router.go('user');
     }
-
-
-
 });
 
 
@@ -130,7 +113,7 @@ var updateTotal = function(proID,userID){
 /**
  Function: Initial Cell database when a user join a project by invitation code.
  **/
-var initialPageforInv = function(proID,userID,names){
+var initialPageforInv = function(proID,userID){
 
     var row = Projects.findOne({_id: proID}).rows;
     //row: How many rows in the existing project
@@ -139,30 +122,30 @@ var initialPageforInv = function(proID,userID,names){
 
     for(var k=3 ; k<=column+2 ; k++){
         var dataTemp = Cells.findOne({projectID: proID, isReport:true, row:-1, column:k}).data;
-        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:-1,column:k,data:'Input',createdAt: new Date(),SDdata:0,username:names});
+        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:-1,column:k,data:dataTemp,createdAt: new Date(),SDdata:0});
     }
 
     for(k=3 ; k<=column+2 ; k++){
         var dataTemp = Cells.findOne({projectID: proID, isReport:true, row:0, column:k}).data;
-        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:0,column:k,data:dataTemp,createdAt: new Date(),SDdata:0,username:names});
+        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:0,column:k,data:dataTemp,createdAt: new Date(),SDdata:0});
     }
     for(k=1 ; k<=row ; k++){
         var dataTemp = Cells.findOne({projectID: proID, isReport:true, row:k, column:0}).data;
-        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:k,column:0,data:dataTemp,createdAt: new Date(),SDdata:0,username:names});
+        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:k,column:0,data:dataTemp,createdAt: new Date(),SDdata:0});
     }
     for(k=1 ; k<=row ; k++){
         var dataTemp = Cells.findOne({projectID: proID, isReport:true, row:k, column:1}).data;
-        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:k,column:1,data:dataTemp,createdAt: new Date(),SDdata:0,username:names});
+        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:k,column:1,data:dataTemp,createdAt: new Date(),SDdata:0});
     }
     for(k=1 ; k<=row ; k++){
         var dataTemp = Cells.findOne({projectID: proID, isReport:true, row:k, column:2}).data;
-        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:k,column:2,data:dataTemp,createdAt: new Date(),SDdata:0,username:names});
+        Cells.insert({userID: userID, isReport : false ,projectID:proID,row:k,column:2,data:dataTemp,createdAt: new Date(),SDdata:0});
     }
 
     for(var m=1; m<=row ; m++)
         for(var n =3 ; n<=column+2; n++){
-            //var dataTemp = Cells.findOne({projectID: proID, isReport:true, row:m, column:n}).data;
-            Cells.insert({userID: userID, isReport : false ,projectID:proID,row:m,column:n,data:'Input',createdAt: new Date(),SDdata:0,username:names});
+            var dataTemp = Cells.findOne({projectID: proID, isReport:true, row:m, column:n}).data;
+            Cells.insert({userID: userID, isReport : false ,projectID:proID,row:m,column:n,data:dataTemp,createdAt: new Date(),SDdata:0});
         }
 
     updateWeight(proID,userID);
@@ -182,13 +165,9 @@ Template.joinProject.events({
         //store invitation code(projectID) in joinporject
         $('[name=joinproject]').val('');
 
-
         Projects.update({_id:joinproject},{$push: {users: {userId:currentUser,username:name}}});
-        Indexs.insert({userID:currentUser,sTH:0});
-        initialPageforInv(joinproject,currentUser,name);
+        initialPageforInv(joinproject,currentUser);
     }
 });
-
-
 
 

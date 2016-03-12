@@ -1,8 +1,6 @@
 <template name = 'matrix'>
 
-
-    {{checkit}}
-<div class="table-container" style="padding-left: 100px">
+<div class="table-container">
      <table>
       <tr>
         <td class="table-null"></td>
@@ -59,16 +57,15 @@
 
 <template name = "matBody">
       <!-- dispaly row>=1 -->
-      <tr>
-
-        {{#each cellFindRow row projectID userID}}
+      <tr>              
+        {{#each cellFindRow row projectID userID}}        
         {{> cellshow}}
         {{/each}}
       </tr>
       <!-- whether to display notes -->
-      <!--{{#if showNotes row}}-->
-      <!--{{> notes}}-->
-      <!--{{/if}}-->
+      {{#if showNotes row}}
+      {{> notes}}
+      {{/if}}
       <!--notes: template file in notes.html-->
       <!--helpers and events in notes.js-->
 
@@ -79,41 +76,33 @@
 <td class="table-{{type}}">
   {{#if oi userID row column}}
   <!-- editable or not -->
-
+      
       {{#if notWeight}}
-          <img src="/pen.png" style="width: 15px; height: 15px">
-
-          {{> editableText collection="cells" field="data" saveOnFocusout=true}}
-
-
-
-          <!--<input placeholder={{data}}>-->
+        
+        {{> editableText collection="cells" field="data" saveOnFocusout=true}}
       {{else}}
-        <!--{{> sliderCell}}-->
-          <!--{{> editableText collection="cells" field="data" saveOnFocusout=true userCanEdit=false}}-->
-      {{dataPercent}}%
+        {{> sliderCell}}
         <!--sliderCell: template file in matrix.html-->
         <!--helpers and events in pages.js-->
       {{/if}}
-
+   
   {{else}}
-
+      
       {{#if notWeight}}
         {{> editableText collection="cells" field="data" saveOnFocusout=true  userCanEdit=false}}
           {{#if isFactor}}
-        <!--<label class="show-notes">-->
-          <!--<input type="checkbox" checked="{{showNotes row}}" style="visibility: hidden" />-->
-          <!--{{# if showNotes row}}         -->
-            <!--<img src="/noteicon.png" style="width: 20px; height: 20px">-->
-          <!--{{else}}-->
-            <!--&lt;!&ndash; Show Notes &ndash;&gt;-->
-            <!--<img src="/noteIconLight.png" style="width: 20px; height: 20px">-->
-          <!--{{/if}}-->
-        <!--</label>-->
+        <label class="show-notes">
+          <input type="checkbox" checked="{{showNotes row}}" style="visibility: hidden" />
+          {{# if showNotes row}}         
+            <img src="/noteicon.png" style="width: 20px; height: 20px">
+          {{else}}
+            <!-- Show Notes -->
+            <img src="/noteIconLight.png" style="width: 20px; height: 20px">
+          {{/if}}
+        </label>
           {{/if}}
       {{else}}
          {{dataPercent}}%
-          <!--{{data}}-->
       {{/if}}
 
   {{/if}}
@@ -147,9 +136,9 @@
     </form>
 </template> 
 
-<!--<template name="sliderCell">-->
-    <!--<div class="slider-container"> -->
-              <!--<div class="sliderrr"></div>-->
-    <!--</div>-->
-    <!--<span>{{dataPercent}}%</span>-->
-<!--</template>-->
+<template name="sliderCell">
+    <div class="slider-container"> 
+              <div class="sliderrr"></div>
+    </div>
+    <span>{{dataPercent}}%</span>
+</template>

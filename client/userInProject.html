@@ -3,38 +3,21 @@
 
     <ul style="margin: 0px ; padding-left: 0px; width: 100%">
 
-        <li class="projectListCell" style="list-style-type: none ;  height: 70px ;text-align: center;border-bottom: 1px solid #FFFFFF">
-            <div style="margin-top: 10px">
-                <a href="/project/{{currentProjectt}}/flag/report" style="color: #ffffff; font-family: STHeitiSC-Medium; font-size: 15px"><img src="/all.png" style="width: 50px; height: 50px"></a>
+        <li class="projectListCell" style="list-style-type: none ;  height: 70px ;text-align: center;">
+            <div style="margin-top: 27px">
+                <a href="/project/{{currentProjectt}}/flag/report" style="color: #ffffff; font-family: STHeitiSC-Medium; font-size: 15px">Everyone</a>
                 <!--Report button to jump into the report page-->
             </div>
         </li>
 
-        {{#each userInProject currentProjectt currentUserr}}
-
-            {{#if curn userId cu}}
-                <li class="projectListCell" style="border-bottom: 1px solid #FFFFFF">
-                    <div style="margin-top: 27px; word-break: break-all">
-                        <a href="/project/{{pj}}/{{userId}}" style="color: #ffffff; font-family: STHeitiSC-Medium; font-size: 15px;">{{username}}</a>
-
-
-                    </div>
-                </li>
-                {{else}}
-                <li class="projectListCell2" style="border-bottom: 1px solid #FFFFFF">
-                    <div style="margin-top: 27px; word-break: break-all">
-                        <a href="/project/{{pj}}/{{userId}}" style="color: #ffffff; font-family: STHeitiSC-Medium; font-size: 15px;">{{username}}</a>
-
-
-                    </div>
-                </li>
-                {{/if}}
-
-
+        {{#each userInProject currentProjectt}}
+            <li class="projectListCell">
+                <div style="margin-top: 27px; word-break: break-all">
+                    <a href="/project/{{pj}}/{{userId}}" style="color: #ffffff; font-family: STHeitiSC-Medium; font-size: 15px;">{{username}}</a>
+                    <!--Show all users-->
+                </div>
+            </li>
         {{/each}}
-
-
-
 
     </ul>
 

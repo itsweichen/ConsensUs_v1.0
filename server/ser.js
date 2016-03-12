@@ -10,10 +10,6 @@ Meteor.publish("chatroom",function(){
 Meteor.publish("notes",function(){
   return Notes.find();
 })
-Meteor.publish("indexs",function(){
-    return Indexs.find();
-})
-
 var cellFindOne = function(rowNo, columnNo){
       return Cells.findOne({ row: rowNo, column:columnNo});
 }

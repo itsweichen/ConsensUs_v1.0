@@ -32,18 +32,10 @@ Template.setTH.onRendered (function(){
     }
   }).on('slide', function (ev, val) {
    // set real values on 'slide' event
-      //console.log(Meteor.userId());
-      var uid = Meteor.userId();
-      var temp1 = Indexs.findOne({userID:uid});
-      Indexs.update({_id:temp1._id},{$set:{sTH:val}});
-   // Projects.update({_id:thisProject._id},{$set:{sTH:val}});
+    Projects.update({_id:thisProject._id},{$set:{sTH:val}});
 
   }).on('change',function(ev,val){
-      //console.log(Meteor.userId());
-   // Projects.update({_id:thisProject._id},{$set:{sTH:val}});
-      var uid2 = Meteor.userId();
-      var temp2 = Indexs.findOne({userID:uid2});
-      Indexs.update({_id:temp2._id},{$set:{sTH:val}});
+    Projects.update({_id:thisProject._id},{$set:{sTH:val}});
     
   })
 });
